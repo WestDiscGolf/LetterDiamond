@@ -13,26 +13,28 @@ namespace LetterDiamond.Tests
         public void Test1(char letter, char row, int offset)
         {
             // Arrange
+            var sut = new SpaceCalculationService();
 
             // Act
-            var result = SpaceCalculationService.OffSet(letter, row);
+            var result = sut.OffSet(letter, row);
 
             // Assert
             result.Should().Be(offset);
         }
 
         [Theory]
-        [InlineData('E', 'A', 0)]
-        [InlineData('E', 'D', 5)]
-        [InlineData('E', 'E', 7)]
-        [InlineData('C', 'B', 1)]
-        [InlineData('C', 'C', 3)]
-        public void GapTest(char letter, char row, int gap)
+        [InlineData('E', 0)]
+        [InlineData('E', 5)]
+        [InlineData('E', 7)]
+        [InlineData('C', 1)]
+        [InlineData('C', 3)]
+        public void GapTest(char row, int gap)
         {
             // Arrange
+            var sut = new SpaceCalculationService();
 
             // Act
-            var result = SpaceCalculationService.Gap(row);
+            var result = sut.Gap(row);
 
             // Assert
             result.Should().Be(gap);
