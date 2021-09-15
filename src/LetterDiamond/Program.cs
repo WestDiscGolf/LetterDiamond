@@ -36,11 +36,30 @@ public static class SpaceCalculationService
 public static class CharExtensions
 {
     /// <summary>
-    /// Original implementation from https://stackoverflow.com/a/25728703/33116
+    /// Based on original implementation from https://stackoverflow.com/a/25728703/33116
     /// </summary>
-    /// <param name="letter"></param>
-    /// <returns></returns>
-    public static int GetIndex(this char letter) => (int)char.ToUpper(letter) - (int)'A';
+    /// <param name="letter">The target letter character.</param>
+    /// <returns>The index of the target letter in the alphabet in zero based index.</returns>
+    public static int GetIndex(this char letter)
+    {
+        if (char.IsLetter(letter) && (letter >= 'A' && letter <= 'z'))
+        {
+            return char.ToUpper(letter) - 'A';
+        }
+
+        throw new NotValidLetterException($"Unable to process '{letter}' as a valid alphabetic value");
+    }
+}
+
+/// <summary>
+/// Exception class to throw when the required letter char is not valid.
+/// </summary>
+public class NotValidLetterException : Exception
+{
+    public NotValidLetterException(string message)
+        : base(message)
+    {
+    }
 }
 
 public class LetterDiamond : Command<LetterDiamond.Settings>
