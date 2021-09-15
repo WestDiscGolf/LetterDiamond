@@ -6,33 +6,23 @@ using System.Diagnostics.CodeAnalysis;
 var app = new CommandApp<LetterDiamond>();
 await app.RunAsync(args);
 
-public static class OffSetProcessor
+public static class SpaceCalculationService
 {
-    public static int Process(char letter, char row)
+    public static int OffSet(char letter, char row)
     {
-        var index = Index(letter);
+        var index = letter.GetIndex();
 
-        index -= Index(row);
+        index -= row.GetIndex();
 
         // todo: check for less than zero
 
         return index;
     }
 
-    /// <summary>
-    /// Original implementation from https://stackoverflow.com/a/25728703/33116
-    /// </summary>
-    /// <param name="letter"></param>
-    /// <returns></returns>
-    private static int Index(char letter) => (int)char.ToUpper(letter) - (int)'A';
-}
-
-public static class GapProcessor
-{
-    public static int Process(char letter, char row)
+    public static int Gap(char letter, char row)
     {
         // zero indexed row count; B is 1
-        var rowCount = Index(row);
+        var rowCount = row.GetIndex();
 
         if (rowCount > 0)
         {
@@ -41,13 +31,16 @@ public static class GapProcessor
 
         return rowCount;
     }
+}
 
+public static class CharExtensions
+{
     /// <summary>
     /// Original implementation from https://stackoverflow.com/a/25728703/33116
     /// </summary>
     /// <param name="letter"></param>
     /// <returns></returns>
-    private static int Index(char letter) => (int)char.ToUpper(letter) - (int)'A';
+    public static int GetIndex(this char letter) => (int)char.ToUpper(letter) - (int)'A';
 }
 
 public class LetterDiamond : Command<LetterDiamond.Settings>
@@ -64,7 +57,7 @@ public class LetterDiamond : Command<LetterDiamond.Settings>
         {
             var c = char.ToUpper(settings.Letter[0]);
 
-            var index = Index(c);
+            var index = c.GetIndex();
 
             for (var i = 0; i <= index; i++)
             {
@@ -74,8 +67,8 @@ public class LetterDiamond : Command<LetterDiamond.Settings>
 
                 var output = char.ConvertFromUtf32(aDelta);
 
-                var offset = OffSetProcessor.Process(c, (char)aDelta);
-                var gap = GapProcessor.Process(c, (char)aDelta);
+                var offset = SpaceCalculationService.OffSet(c, (char)aDelta);
+                var gap = SpaceCalculationService.Gap(c, (char)aDelta);
 
                 for (var off = 0; off < offset; off++) { Console.Write(' '); }
                 Console.Write(output);
@@ -96,8 +89,8 @@ public class LetterDiamond : Command<LetterDiamond.Settings>
 
                 var output = char.ConvertFromUtf32(aDelta);
 
-                var offset = OffSetProcessor.Process(c, (char)aDelta);
-                var gap = GapProcessor.Process(c, (char)aDelta);
+                var offset = SpaceCalculationService.OffSet(c, (char)aDelta);
+                var gap = SpaceCalculationService.Gap(c, (char)aDelta);
 
                 for (var off = 0; off < offset; off++) { Console.Write(' '); }
                 Console.Write(output);
@@ -115,13 +108,6 @@ public class LetterDiamond : Command<LetterDiamond.Settings>
 
         return 0;
     }
-
-    /// <summary>
-    /// Original implementation from https://stackoverflow.com/a/25728703/33116
-    /// </summary>
-    /// <param name="letter"></param>
-    /// <returns></returns>
-    private static int Index(char letter) => (int)char.ToUpper(letter) - (int)'A';
 
     public sealed class Settings : CommandSettings
     {
