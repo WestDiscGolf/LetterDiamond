@@ -1,5 +1,9 @@
-﻿public class SpaceCalculationService : ISpaceCalculationService
+﻿/// <summary>
+/// The space calculation service implementation.
+/// </summary>
+public class SpaceCalculationService : ISpaceCalculationService
 {
+    /// <inheritdoc />
     public int OffSet(char letter, char row)
     {
         var index = letter.GetIndex();
@@ -11,6 +15,7 @@
         return index;
     }
 
+    /// <inheritdoc />
     public int Gap(char row)
     {
         // zero indexed row count; B is 1

@@ -3,6 +3,9 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Spectre.Console.Cli;
 
+/// <summary>
+/// The Letter Diamond command
+/// </summary>
 public class LetterDiamond : Command<LetterDiamond.Settings>
 {
     private readonly ISpaceCalculationService _spaceCalculationService;

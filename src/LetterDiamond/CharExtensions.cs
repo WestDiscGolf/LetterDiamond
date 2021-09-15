@@ -1,4 +1,7 @@
-﻿public static class CharExtensions
+﻿/// <summary>
+/// Char extension methods.
+/// </summary>
+public static class CharExtensions
 {
     /// <summary>
     /// Based on original implementation from https://stackoverflow.com/a/25728703/33116
