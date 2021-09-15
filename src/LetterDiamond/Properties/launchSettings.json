@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LetterDiamond": {
+      "commandName": "Project",
+      "commandLineArgs": "E"
+    }
+  }
+}

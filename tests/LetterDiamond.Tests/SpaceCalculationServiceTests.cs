@@ -32,7 +32,7 @@ namespace LetterDiamond.Tests
             // Arrange
 
             // Act
-            var result = SpaceCalculationService.Gap(letter, row);
+            var result = SpaceCalculationService.Gap(row);
 
             // Assert
             result.Should().Be(gap);

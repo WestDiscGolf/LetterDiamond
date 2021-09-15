@@ -19,7 +19,7 @@ public static class SpaceCalculationService
         return index;
     }
 
-    public static int Gap(char letter, char row)
+    public static int Gap(char row)
     {
         // zero indexed row count; B is 1
         var rowCount = row.GetIndex();
@@ -64,74 +64,74 @@ public class NotValidLetterException : Exception
 
 public class LetterDiamond : Command<LetterDiamond.Settings>
 {
+    public sealed class Settings : CommandSettings
+    {
+        [Description("Which LetterDiamond would you like to create?")]
+        [CommandArgument(0, "[Letter]")]
+        public string? Letter { get; init; }
+    }
+
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
         // validation the value entered is a char, between A and Z
-
-        Console.WriteLine("Selected Answer: " + settings.Letter);
-
-        // you can "increment" the letter
-
-        if (settings.Letter?.Length == 1 && char.IsLetter(settings.Letter[0]))
+        if (!char.IsLetter(settings.Letter[0]))
         {
+            throw new NotValidLetterException($"Unable to process '{settings.Letter[0]}' as a valid alphabetic value.");
+        }
+
+        if (settings.Letter.Length > 1)
+        {
+            throw new NotValidLetterException($"Unable to process '{settings.Letter}' as only single alphabetic values are valid.");
+        }
+
+        if (char.IsLetter(settings.Letter[0]))
+        {
+            Console.WriteLine("Selected Letter: " + settings.Letter);
+            Console.WriteLine("--------------------------------");
             var c = char.ToUpper(settings.Letter[0]);
 
             var index = c.GetIndex();
 
             for (var i = 0; i <= index; i++)
             {
-                // we're on the first letter 'A'
-                var a = (int)'A';
-                var aDelta = a + i;
-
-                var output = char.ConvertFromUtf32(aDelta);
-
-                var offset = SpaceCalculationService.OffSet(c, (char)aDelta);
-                var gap = SpaceCalculationService.Gap(c, (char)aDelta);
-
-                for (var off = 0; off < offset; off++) { Console.Write(' '); }
-                Console.Write(output);
-
-                if (aDelta > (int)'A')
-                {
-                    for (var g = 0; g < gap; g++) { Console.Write(' '); }
-                    Console.Write(output);
-                }
-
-                Console.WriteLine();
+                OutputDisplay(i, c);
             }
             for (var i = index - 1; i >= 0; i--)
             {
-                // we're on the first letter 'A'
-                var a = (int)'A';
-                var aDelta = a + i;
-
-                var output = char.ConvertFromUtf32(aDelta);
-
-                var offset = SpaceCalculationService.OffSet(c, (char)aDelta);
-                var gap = SpaceCalculationService.Gap(c, (char)aDelta);
-
-                for (var off = 0; off < offset; off++) { Console.Write(' '); }
-                Console.Write(output);
-
-                if (aDelta > (int)'A')
-                {
-                    for (var g = 0; g < gap; g++) { Console.Write(' '); }
-                    Console.Write(output);
-                }
-
-                Console.WriteLine();
+                OutputDisplay(i, c);
             }
-
         }
 
         return 0;
     }
 
-    public sealed class Settings : CommandSettings
+    private static void OutputDisplay(int i, char c)
     {
-        [Description("Which LetterDiamond would you like to create?")]
-        [CommandArgument(0, "[Letter]")]
-        public string? Letter { get; init; }
+        // we're on the first letter 'A'
+        var aDelta = 'A' + i;
+
+        var output = char.ConvertFromUtf32(aDelta);
+
+        var offset = SpaceCalculationService.OffSet(c, (char)aDelta);
+        var gap = SpaceCalculationService.Gap((char)aDelta);
+
+        OutputGap(offset);
+        Console.Write(output);
+
+        if (aDelta > (int)'A')
+        {
+            OutputGap(gap);
+            Console.Write(output);
+        }
+
+        Console.WriteLine();
+    }
+
+    private static void OutputGap(int numberOfCharacters)
+    {
+        for (var g = 0; g < numberOfCharacters; g++)
+        {
+            Console.Write(' ');
+        }
     }
 }
